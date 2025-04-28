@@ -137,3 +137,54 @@ const app = async () => {
   }
 };
 app();
+
+//using both then and async await
+function doSomething() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      console.log("Did something");
+      resolve("https://example.com/");
+    }, 200);
+  });
+}
+
+doSomething()
+  .then((url) => fetch(url))
+  .then((res) => res.json())
+  .then(() => console.log(res));
+
+async function logIngrdients() {
+  const url = await doSomething();
+  const res = await fetch(url);
+  const data = await res.json();
+  console.log(data);
+}
+
+logIngrdients();
+
+//chaining after a catch
+doSomething()
+  .then(() => {
+    throw new Error("Somthing failed");
+    console.log("Do this");
+  })
+  .catch(() => {
+    console.log("Do that");
+  })
+  .then(() => {
+    console.log("Do this no matter what happened before");
+  });
+
+//using async-await
+async function main() {
+  try {
+    await doSomething();
+    throw new Error("Something failed");
+    console.log("Do this");
+  } catch (e) {
+    console.log("Dp that");
+  }
+  console.log("Do this no matter what happened before");
+}
+
+main();
